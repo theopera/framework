@@ -1,0 +1,33 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Opera
+ * opera
+ *
+ * @author    Marc Heuker of Hoek <me@marchoh.com>
+ * @copyright 2016 - 2016 All rights reserved
+ * @license   MIT
+ * @created   10-7-16
+ * @version   1.0
+ */
+
+$autoloaders = ['vendor/autoload.php', '../vendor/autoload.php', '../../vendor/autoload.php'];
+
+$autoloaderLoaded = false;
+foreach($autoloaders as $autoloader){
+    if(file_exists($autoloader)){
+        require $autoloader;
+        $autoloaderLoaded = true;
+        break;
+    }
+}
+
+if(!$autoloaderLoaded){
+    die('Could not find the composer autoloader, please run composer install first.');
+}
+
+
+use Opera\Installer\Installer;
+
+$installer = new Installer();
+$installer->start();

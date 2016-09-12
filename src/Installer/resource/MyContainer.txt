@@ -1,0 +1,27 @@
+<?php
+
+namespace __NAMESPACE__;
+
+use Opera\Component\WebApplication\Context;
+
+/**
+ * Class MyContainer
+ *
+ * This is a special class to initiate all your classes
+ * that will be used around your project
+ *
+ * It is accessible within your controllers
+ */
+class MyContainer
+{
+    /**
+     * @var MyContext
+     */
+    protected $context;
+
+    public function __construct(Context $context)
+    {
+        $this->context = $context;
+    }
+
+}

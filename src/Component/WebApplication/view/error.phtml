@@ -1,0 +1,106 @@
+<?php
+/**
+ * @var $environment string
+ * @var $statusCode int
+ * @var $statusText string
+ * 
+ * @var $throwable Throwable
+ */
+?>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><?=$statusCode?> <?=$statusText?></title>
+    <style type="text/css">
+        *{
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+        .container{
+            margin: auto;
+            margin-top: 40px;
+            width: 80%;
+            min-width: 500px;
+            max-width: 1200px;
+        }
+        .panel{
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 10px 10px 0 0;
+        }
+        .panel-heading{
+            padding: 20px;
+            border-radius: 10px 10px 0 0;
+            color: #fff;;
+        }
+        .panel-heading h2{
+            margin: 0;
+            padding:0 ;
+        }
+        .panel-body{
+            padding: 20px;
+        }
+
+        .panel-danger .panel-heading{
+            background-color: #d32d39;
+        }
+        .text-center{
+            text-align: center;
+            font-size: 10pt;
+        }
+        hr{
+            border: 1px solid #eee;
+        }
+        pre{
+            overflow-x: scroll;
+            font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+            line-height: 25px;
+            background-color: #ddd;
+            border-radius: 10px;
+            padding: 4px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="panel panel-danger">
+        <div class="panel-heading">
+            <h2 class="panel-title"><?=$statusCode?> <?=$statusText?></h2>
+        </div>
+
+
+        <div class="panel-body">
+            <p><?=$throwable->getMessage()?></p>
+            <?php if($environment !== 'production'): ?>
+            <hr>
+            <table border="0" cellpadding="4">
+                <tr>
+                    <td><strong>Type:</strong></td><td><?=get_class($throwable)?></td>
+                </tr>
+                <tr>
+                    <td><strong>File:</strong></td><td><?=$throwable->getFile()?></td>
+                </tr>
+                <tr>
+                    <td><strong>Line:</strong></td><td><?=$throwable->getLine()?></td>
+                </tr>
+            </table>
+            <pre><?=htmlspecialchars($throwable->getTraceAsString())?></pre>
+            <?php endif ?>
+        </div>
+
+
+    </div>
+
+    <footer>
+        <p class="text-center">
+            The Opera Framework &copy; <?=date('Y')?>
+        </p>
+
+    </footer>
+
+
+</div>
+
+
+</body>
+</html>

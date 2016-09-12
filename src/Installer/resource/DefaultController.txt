@@ -1,0 +1,17 @@
+<?php
+
+namespace __NAMESPACE__\Controller;
+
+
+use Opera\Component\Http\Response;
+use __NAMESPACE__\MyController;
+
+class DefaultController extends MyController
+{
+
+    public function indexGet() : Response
+    {
+        return $this->render();
+    }
+
+}

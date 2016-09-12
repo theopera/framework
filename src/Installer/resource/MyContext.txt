@@ -1,0 +1,42 @@
+<?php
+
+namespace __NAMESPACE__;
+
+
+use Opera\Component\WebApplication\Context;
+use Opera\Component\WebApplication\RouteCollection;
+
+class MyContext extends Context
+{
+
+    /**
+     * @return MyContainer
+     */
+    private $container;
+
+    public function getControllerNamespace() : string
+    {
+        return '__NAMESPACE_DOUBLE__\\Controller\\';
+    }
+
+    public function getViewDirectory() : string
+    {
+        return __DIR__ . '/view';
+    }
+
+    public function getRouteCollection() : RouteCollection
+    {
+        $collection = new RouteCollection($this->getControllerNamespace());
+
+        return $collection;
+    }
+
+    public function getContainer() : MyContainer
+    {
+        if($this->container === null){
+            $this->container = new MyContainer($this);
+        }
+
+        return $this->container;
+    }
+}
