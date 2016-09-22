@@ -44,8 +44,7 @@ class Authentication implements AuthenticationInterface
     {
         $foundUser = $this->provider->findUser($user->getUsername());
 
-        if ($foundUser->getUsername() === $user->getUsername() &&
-            password_verify($user->getPassword(), $foundUser->getPassword())) {
+        if ($foundUser->verify($user)) {
             $this->session->add('authenticatedUser', $foundUser);
             return true;
         }
@@ -63,9 +62,15 @@ class Authentication implements AuthenticationInterface
         return $this->session->exists('authenticatedUser');
     }
 
-    public function getAuthenticatedUser() : UserInterface
+    public function getUser() : UserInterface
     {
-        return $this->session->get('authenticatedUser');
+        $user = $this->session->get('authenticatedUser');
+
+        if ($user === null) {
+            return new User('Guest', 'guest');
+        }
+
+        return $user;
     }
 
 

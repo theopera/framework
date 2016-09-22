@@ -21,16 +21,55 @@ class UserTest extends TestCase
 
     public function testBasicUserGood()
     {
-        $user = new User('john', 'doe');
+        $password = '32%Dft4fYd44r45^';
+        $passwordHash = password_hash($password, PASSWORD_BCRYPT);
 
-        self::assertEquals('john', $user->getUsername());
-        self::assertEquals('doe', $user->getPassword());
-        self::assertEquals('user', $user->getRole());
+        $mainUser = new User('john', 'user');
+        $mainUser->setPasswordHash($passwordHash);
+
+        $user = new User('john', 'user');
+        $user->setPassword($password);
+
+        self::assertEquals('john', $mainUser->getUsername());
+        self::assertEquals('user', $mainUser->getRole());
+
+        // Correct user & pass
+        self::assertTrue($mainUser->verify($user));
+    }
+
+    public function testBasicUserWrongPasswordBad()
+    {
+        $password = '32%Dft4fYd44r45^';
+        $passwordHash = password_hash($password, PASSWORD_BCRYPT);
+
+        $mainUser = new User('john', 'user');
+        $mainUser->setPasswordHash($passwordHash);
+
+        $user = new User('john', 'user');
+        $user->setPassword('reTY54tq4t5yqw5');
+
+        // Incorrect pass
+        self::assertFalse($mainUser->verify($user));
+    }
+
+    public function testBasicUserWrongUsernameBad()
+    {
+        $password = '32%Dft4fYd44r45^';
+        $passwordHash = password_hash($password, PASSWORD_BCRYPT);
+
+        $mainUser = new User('john', 'user');
+        $mainUser->setPasswordHash($passwordHash);
+
+        $user = new User('peter', 'user');
+        $user->setPassword('reTY54tq4t5yqw5');
+
+        // Incorrect username
+        self::assertFalse($mainUser->verify($user));
     }
 
     public function testRoleGood()
     {
-        $user = new User('john', 'doe', 'admin');
+        $user = new User('john' , 'admin');
 
         self::assertEquals('admin', $user->getRole());
     }

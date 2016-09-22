@@ -25,6 +25,13 @@ class User implements UserInterface
      * @var string
      */
     private $password;
+
+    /**
+     * The Bcrypt hash of the password
+     * @var string
+     */
+    private $passwordHash;
+
     /**
      * @var string
      */
@@ -34,13 +41,10 @@ class User implements UserInterface
      * User constructor.
      *
      * @param string $username
-     * @param string $password
-     * @param string $role
      */
-    public function __construct(string $username, string $password, string $role = 'user')
+    public function __construct(string $username, string $role = 'user')
     {
         $this->username = $username;
-        $this->password = $password;
         $this->role = $role;
     }
 
@@ -50,11 +54,63 @@ class User implements UserInterface
         return $this->username;
     }
 
-    public function getPassword() : string
+    /**
+     * @param string $password
+     *
+     * @return self
+     */
+    public function setPassword(string $password) : self
     {
-        return $this->password;
+        $this->password = $password;
+
+        return $this;
     }
 
+    /**
+     * Set a password hash generated with password_hash('pass', PASSWORD_BCRYPT)
+     *
+     * @param string $passwordHash
+     *
+     * @return self
+     */
+    public function setPasswordHash(string $passwordHash) : self
+    {
+        $this->passwordHash = $passwordHash;
+
+        return $this;
+    }
+
+    /**
+     * Set the role of this user
+     *
+     * @param string $role
+     *
+     * @return self
+     */
+    public function setRole(string $role) : self
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function verify(UserInterface $user) : bool
+    {
+        if ($user instanceof User) {
+            if (!empty($this->passwordHash) && !empty($user->password)) {
+                return password_verify($user->password, $this->passwordHash);
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getRole() : string
     {
         return $this->role;

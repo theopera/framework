@@ -24,11 +24,11 @@ interface UserInterface
     public function getUsername() : string;
 
     /**
-     * The password of the user
+     * Verifies that the given user is equal to this object
      *
      * @return string
      */
-    public function getPassword() : string;
+    public function verify(UserInterface $user) : bool;
 
     /**
      * the role of the user e.g. admin, moderator
