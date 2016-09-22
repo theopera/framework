@@ -16,10 +16,30 @@ namespace Opera\Component\Authentication;
 interface AuthenticationInterface
 {
 
+    /**
+     * Tries to authenticate the provided user
+     * using the the verify method of the found user
+     *
+     * @param UserInterface $user
+     * @return bool
+     */
     public function authenticate(UserInterface $user) : bool;
 
+    /**
+     * When the user is authenticated e.g. higher than the guest level
+     *
+     * @return bool
+     */
     public function isAuthenticated() : bool;
 
-    public function getAuthenticatedUser() : UserInterface;
+    /**
+     * Get the current user
+     *
+     * When an user is not authenticated a Guest user will be returned
+     * with the role 'guest'
+     *
+     * @return UserInterface
+     */
+    public function getUser() : UserInterface;
 
 }

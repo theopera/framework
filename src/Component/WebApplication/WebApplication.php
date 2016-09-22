@@ -129,11 +129,8 @@ class WebApplication implements MiddlewareInterface
         $globals = [
             'environment' => $this->context->getEnvironment(),
             'var' => $config->getSection('templating')->export(),
+            'user' => $auth->getUser(),
         ];
-
-        if ($auth !== null && $auth->isAuthenticated()) {
-            $globals['user'] = $auth->getAuthenticatedUser();
-        }
 
         $template->addGlobal('app', $globals);
     }

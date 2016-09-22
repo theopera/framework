@@ -13,10 +13,9 @@
 namespace Opera\Component\WebApplication;
 
 
+use Opera\Component\Http\HttpException;
 use Opera\Component\Http\Session\SessionInterface;
 use Opera\Component\Template\Template;
-use Opera\Component\Http\Header\Header;
-use Opera\Component\Http\Header\Headers;
 use Opera\Component\Http\Request;
 use Opera\Component\Http\Response;
 
@@ -295,6 +294,30 @@ abstract class Controller
     protected function getContext() : Context
     {
         return $this->context;
+    }
+
+    /**
+     * Has the current user permission for the given action
+     *
+     * @param string $permission
+     * @param bool $return Return a boolean instead of throwing a forbidden exception
+     */
+    protected function hasPermission(string $permission, bool $return = false)
+    {
+        $auth = $this->getContext()->getAuthentication();
+        $user = $auth->getUser();
+        $acl = $this->getContext()->getAccessControlList();
+
+        if (!$acl->hasAccess($user, $permission)) {
+
+            if ($return) {
+                return false;
+            }else{
+                throw HttpException::forbidded('The current user has no permission to this action');
+            }
+        }
+
+        return true;
     }
 
 

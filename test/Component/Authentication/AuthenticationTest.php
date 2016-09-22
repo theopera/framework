@@ -22,17 +22,18 @@ class AuthenticationTest extends TestCase
 
     public function testSimpleAuthenticationGood()
     {
-        $user = new User('john', '12345');
-        $provider = $this->getMockProvider(new User('john', password_hash('12345', PASSWORD_BCRYPT)));
+        $user = new User('john');
+        $user->setPassword(12345);
+        $provider = $this->getMockProvider((new User('john'))->setPasswordHash(password_hash('12345', PASSWORD_BCRYPT)));
         $session = $this->getMockSession();
 
         $auth = new Authentication($provider, $session);
 
         self::assertTrue($auth->authenticate($user));
         self::assertTrue($auth->isAuthenticated());
-        self::assertEquals($auth->getAuthenticatedUser(), $session->get('authenticatedUser'));
-        self::assertEquals($user->getUsername(), $auth->getAuthenticatedUser()->getUsername());
-        self::assertEquals($user->getRole(), $auth->getAuthenticatedUser()->getRole());
+        self::assertEquals($auth->getUser(), $session->get('authenticatedUser'));
+        self::assertEquals($user->getUsername(), $auth->getUser()->getUsername());
+        self::assertEquals($user->getRole(), $auth->getUser()->getRole());
     }
 
     public function testSimpleAuthenticationBadPassword()
