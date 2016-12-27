@@ -61,7 +61,7 @@ class Header implements HeaderInterface
     {
         $properties = '';
         foreach ($this->properties as $name => $value) {
-            $properties .= sprintf('; %s: "%s" ', $name, $value);
+            $properties .= sprintf('; %s="%s" ', $name, $value);
         };
 
         return $this->value . $properties;
