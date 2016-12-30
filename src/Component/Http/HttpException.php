@@ -46,7 +46,7 @@ class HttpException extends Exception
         return new HttpException(Response::STATUS_UNAUTHORIZED, $message);
     }
 
-    public static function forbidded(string $message = 'Permission dendied')
+    public static function forbidden(string $message = 'Permission denied')
     {
         return new HttpException(Response::STATUS_FORBIDDEN, $message);
     }

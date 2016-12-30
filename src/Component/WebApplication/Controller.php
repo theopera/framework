@@ -313,7 +313,7 @@ abstract class Controller
             if ($return) {
                 return false;
             }else{
-                throw HttpException::forbidded('The current user has no permission to this action');
+                throw HttpException::forbidden('The current user has no permission to this action');
             }
         }
 
