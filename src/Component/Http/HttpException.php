@@ -13,7 +13,6 @@
 namespace Opera\Component\Http;
 
 
-
 use Exception;
 
 class HttpException extends Exception
@@ -49,5 +48,9 @@ class HttpException extends Exception
     public static function forbidden(string $message = 'Permission denied')
     {
         return new HttpException(Response::STATUS_FORBIDDEN, $message);
+    }
+
+    public static function error(string $message = 'Unexpected internal server error'){
+        return new HttpException(Response::STATUS_INTERNAL_SERVER_ERROR, $message);
     }
 }

@@ -13,13 +13,9 @@
 namespace Opera\Component\WebApplication;
 
 
-use Opera\Component\Authentication\Authentication;
-use Opera\Component\Authentication\AuthenticationException;
 use Opera\Component\Authentication\AuthenticationInterface;
 use Opera\Component\Authorization\AccessControlList;
 use Opera\Component\Authorization\AccessControlListInterface;
-use Opera\Component\Authorization\AccessControlListProviderInterface;
-use Opera\Component\Database\DatabaseException;
 use Opera\Component\Database\DatabaseManager;
 use Opera\Component\Database\DatabaseManagerInterface;
 use Opera\Component\Http\Session\SessionManager;
@@ -94,9 +90,9 @@ abstract class Context
         throw NotConfiguredException::component(DatabaseManager::class);
     }
 
-    public function getAuthentication() : AuthenticationInterface
+    public function getAuthentication() : ?AuthenticationInterface
     {
-        throw NotConfiguredException::component(Authentication::class);
+        return null;
     }
 
     public function getAccessControlList() : AccessControlListInterface

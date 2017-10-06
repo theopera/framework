@@ -17,7 +17,9 @@ use Opera\Component\Authentication\AuthenticationException;
 use Opera\Component\Authentication\AuthenticationInterface;
 use Opera\Component\Http\Header\Header;
 use Opera\Component\Http\HttpException;
+use Opera\Component\Http\JsonResponse;
 use Opera\Component\Http\Middleware\MiddlewareCollection;
+use Opera\Component\Http\Mime;
 use Opera\Component\Http\RequestInterface;
 use Opera\Component\Http\ResponseInterface;
 use Opera\Component\Template\PhpEngine;
@@ -94,7 +96,11 @@ class WebApplication implements MiddlewareInterface
         // If we have a trailing slash we will do redirect (e.g. /bla/bla/ -> /bla/bla)
         if (strlen($this->request->getPathInfo()) > 1 && substr($this->request->getPathInfo(), -1) === '/') {
             // Because we do a Permanent Redirect any post parameters will be resend to the redirect url
-            return Response::redirect(substr($this->request->getPathInfo(), 0, -1), [], Response::STATUS_PERMANENTLY_REDIRECT);
+            return Response::redirect(
+                substr($this->request->getPathInfo(), 0, -1),
+                [],
+                Response::STATUS_PERMANENTLY_REDIRECT
+            );
         }
 
         $router = new Router($this->context);
@@ -123,30 +129,18 @@ class WebApplication implements MiddlewareInterface
         $sessionManager->start();
 
         $template = $this->context->getTemplateEngine();
-        $auth = $this->getAuth();
+        $auth = $this->context->getAuthentication();
         $config = $this->context->getConfig();
+
+        $user = $auth ? $auth->getUser() : null;
 
         $globals = [
             'environment' => $this->context->getEnvironment(),
             'var' => $config->getSection('templating')->export(),
-            'user' => $auth->getUser(),
+            'user' => $user,
         ];
 
         $template->addGlobal('app', $globals);
-    }
-
-    /**
-     * FIXME: We really need nullable return types
-     *
-     * @return null|AuthenticationInterface
-     */
-    private function getAuth()
-    {
-        try{
-            return $this->context->getAuthentication();
-        }catch (AuthenticationException $e){}
-
-        return null;
     }
 
     /**
@@ -193,11 +187,29 @@ class WebApplication implements MiddlewareInterface
                 $exception = $throwable->getPrevious();
             }
         }
-        
+
+        if ($this->request->getHeaders()->get('Accept')->contains(Mime::APPLICATION_JSON)) {
+            return $this->errorPageJson($statusCode, $exception);
+        }
+
+        return $this->errorPageHtml($statusCode, $exception);
+    }
+
+    private function errorPageJson(int $statusCode, Throwable $throwable) : Response
+    {
+        return new JsonResponse([
+            'message' => $throwable->getMessage(),
+            'file' => $throwable->getFile(),
+            'line' => $throwable->getLine(),
+            'stacktrace' => $throwable->getTrace(),
+        ], JSON_PRETTY_PRINT, $statusCode);
+    }
+
+    private function errorPageHtml(int $statusCode, Throwable $throwable) : Response
+    {
         $data = [
             'environment' => $this->context->getEnvironment(),
             'throwable' => $throwable,
-            'exception' => $exception,
             'statusCode' => $statusCode,
             'statusText' => Response::getStatusText($statusCode),
         ];

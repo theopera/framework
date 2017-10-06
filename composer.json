@@ -1,6 +1,6 @@
 {
     "name": "theopera/framework",
-    "description": "The Opera Framework is an php 7 framework",
+    "description": "The Opera Framework is a php 7.1 framework",
     "type": "library",
     "minimum-stability": "stable",
     "authors": [
@@ -10,7 +10,7 @@
         }
     ],
     "require":{
-        "php" : "^7"
+        "php" : "^7.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.5"

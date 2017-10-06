@@ -42,13 +42,6 @@ abstract class Controller
     private $context;
 
     /**
-     * Global vars used in the template
-     *
-     * @var string[]
-     */
-    private $globals = [];
-
-    /**
      * Controller constructor.
      *
      * @param RouteEndpoint $route

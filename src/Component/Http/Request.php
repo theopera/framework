@@ -64,6 +64,11 @@ class Request implements RequestInterface
     private $cookies;
 
     /**
+     * @var string
+     */
+    private $content;
+
+    /**
      * Client ip address
      *
      * @var string
@@ -134,6 +139,14 @@ class Request implements RequestInterface
     public function setMethod(string $method)
     {
         $this->method = $method;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContent() : string
+    {
+        return $this->content;
     }
 
     /**
@@ -260,6 +273,8 @@ class Request implements RequestInterface
 
         $request = new Request($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI'], $headers, $_GET, $_POST);
         $request->setIp($_SERVER['REMOTE_ADDR']);
+
+        $request->content = file_get_contents('php://input');
 
         return $request;
     }

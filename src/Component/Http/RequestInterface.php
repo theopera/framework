@@ -49,6 +49,11 @@ interface RequestInterface
     public function setMethod(string $method);
 
     /**
+     * @return string
+     */
+    public function getContent() : string;
+
+    /**
      * @return bool
      */
     public function isHead() : bool;

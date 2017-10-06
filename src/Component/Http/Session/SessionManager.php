@@ -47,6 +47,8 @@ class SessionManager implements SessionManagerInterface
 
     public function __destruct()
     {
-        $_SESSION = $this->session->export();
+        if ($this->session !== null) {
+            $_SESSION = $this->session->export();
+        }
     }
 }

@@ -27,7 +27,7 @@ class JsonResponse extends Response
     public function __construct($data, $jsonOptions = 0, int $statusCode = Response::STATUS_OK, Headers $headers = null)
     {
         $json = json_encode($data, $jsonOptions);
-        parent::__construct($json, $statusCode, $this->headers);
+        parent::__construct($json, $statusCode, $headers);
 
         $this->headers->add(new Header('Content-Type', Mime::APPLICATION_JSON), true);
     }
