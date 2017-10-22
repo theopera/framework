@@ -26,8 +26,8 @@ class WebApplicationTest extends TestCase
         $request = $this->getMockBuilder(RequestInterface::class)->getMock();
         $context = $this->getMockBuilder(Context::class)->getMock();
 
-        $app = new WebApplication($request, $context);
-        $response = $app->run();
+        $app = new WebApplication($context);
+        $response = $app->run($request);
 
         // TODO: Make some tests
 
