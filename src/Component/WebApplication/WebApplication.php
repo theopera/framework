@@ -13,8 +13,6 @@
 namespace Opera\Component\WebApplication;
 
 
-use Opera\Component\Authentication\AuthenticationException;
-use Opera\Component\Authentication\AuthenticationInterface;
 use Opera\Component\Http\Header\Header;
 use Opera\Component\Http\HttpException;
 use Opera\Component\Http\JsonResponse;
@@ -51,27 +49,26 @@ class WebApplication implements MiddlewareInterface
     /**
      * WebApplication constructor.
      *
-     * @param RequestInterface $request
      * @param Context $context
      */
-    public function __construct(RequestInterface $request, Context $context)
+    public function __construct(Context $context)
     {
-        $this->request = $request;
         $this->context = $context;
 
         $this->config = $context->getConfig()->getSection('general');
     }
 
     /**
+     * @param RequestInterface $request
      * @return ResponseInterface
      */
-    public function run() : ResponseInterface
+    public function run(RequestInterface $request) : ResponseInterface
     {
 
         try{
             $this->setup();
 
-            $collection = new MiddlewareCollection($this->request);
+            $collection = new MiddlewareCollection($request);
             $collection = $this->context->getMiddlewareCollection($collection);
             // Add the web application itself at the end of the middleware collection
             $collection->add($this);
@@ -86,7 +83,7 @@ class WebApplication implements MiddlewareInterface
             return $response;
 
         }catch (Throwable $e){
-            return $this->errorPage($e);
+            return $this->errorPage($e, $request);
         }
 
     }
@@ -94,29 +91,29 @@ class WebApplication implements MiddlewareInterface
     public function handle(MiddlewareCollectionInterface $collection, RequestInterface $request) : ResponseInterface
     {
         // If we have a trailing slash we will do redirect (e.g. /bla/bla/ -> /bla/bla)
-        if (strlen($this->request->getPathInfo()) > 1 && substr($this->request->getPathInfo(), -1) === '/') {
+        if (strlen($request->getPathInfo()) > 1 && substr($request->getPathInfo(), -1) === '/') {
             // Because we do a Permanent Redirect any post parameters will be resend to the redirect url
             return Response::redirect(
-                substr($this->request->getPathInfo(), 0, -1),
+                substr($request->getPathInfo(), 0, -1),
                 [],
                 Response::STATUS_PERMANENTLY_REDIRECT
             );
         }
 
         $router = new Router($this->context);
-        $route = $router->resolve($this->request);
+        $route = $router->resolve($request);
         $endPoint = $route->getEndPoint();
 
         if (!$endPoint->isCallable()) {
             throw HttpException::notFound(
-                sprintf('The request "%s" was not found', substr($this->request->getUri(), 0, 64))
+                sprintf('The request "%s" was not found', substr($request->getUri(), 0, 64))
             );
         }
 
         $fullQuantifiedName = $endPoint->getFullyQualifiedName();
-        $controller = new $fullQuantifiedName($endPoint, $this->request, $this->context);
+        $controller = new $fullQuantifiedName($endPoint, $request, $this->context);
 
-        $mapper = $this->mapQueryToActionParameters($endPoint);
+        $mapper = $this->mapQueryToActionParameters($endPoint, $request);
         $action = $endPoint->getAction(true);
         
         return call_user_func_array([$controller, $action], $mapper);
@@ -151,11 +148,11 @@ class WebApplication implements MiddlewareInterface
      * @return string[]
      * @throws HttpException
      */
-    private function mapQueryToActionParameters(RouteEndpoint $route) : array
+    private function mapQueryToActionParameters(RouteEndpoint $route, RequestInterface $request) : array
     {
         $reflection = new ReflectionClass($route->getFullyQualifiedName());
         $method = $reflection->getMethod($route->getAction(true));
-        $query = $this->request->getQuery();
+        $query = $request->getQuery();
 
         $mapper = [];
         foreach ($method->getParameters() as $parameter) {
@@ -177,7 +174,12 @@ class WebApplication implements MiddlewareInterface
         return $mapper;
     }
 
-    private function errorPage(Throwable $throwable) : Response
+    /**
+     * @param Throwable $throwable
+     * @param RequestInterface $request
+     * @return Response
+     */
+    private function errorPage(Throwable $throwable, RequestInterface $request) : Response
     {
         $statusCode = 500;
         $exception = $throwable;
@@ -188,7 +190,8 @@ class WebApplication implements MiddlewareInterface
             }
         }
 
-        if ($this->request->getHeaders()->get('Accept')->contains(Mime::APPLICATION_JSON)) {
+        $accept = $request->getHeaders()->get('Accept');
+        if ($accept && $accept->contains(Mime::APPLICATION_JSON)) {
             return $this->errorPageJson($statusCode, $exception);
         }
 

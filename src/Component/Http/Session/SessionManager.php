@@ -33,7 +33,7 @@ class SessionManager implements SessionManagerInterface
     {
         if ($this->session === null) {
             // FIXME: This is just temporary, just a quick fix to make it work
-            $session = new Session(session_id(), $_SESSION);
+            $session = new Session(session_id(), $_SESSION ?? []);
             $this->session = $session;
         }
 

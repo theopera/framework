@@ -54,6 +54,11 @@ interface RequestInterface
     public function getContent() : string;
 
     /**
+     * @param string $content
+     */
+    public function setContent(string $content);
+
+    /**
      * @return bool
      */
     public function isHead() : bool;

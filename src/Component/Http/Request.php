@@ -149,6 +149,11 @@ class Request implements RequestInterface
         return $this->content;
     }
 
+    public function setContent(string $content)
+    {
+        $this->content = $content;
+    }
+
     /**
      * @return bool
      */
