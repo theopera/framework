@@ -71,6 +71,8 @@ class RequestBuilder
     }
 
     /**
+     * Set the url
+     *
      * @param string $url
      * @return RequestBuilder
      */
@@ -78,6 +80,18 @@ class RequestBuilder
     {
         $this->url = $url;
 
+        return $this;
+    }
+
+    /**
+     * Set the query parameters
+     *
+     * @param array $query
+     * @return RequestBuilder
+     */
+    public function query(array $query): RequestBuilder
+    {
+        $this->query = $query;
         return $this;
     }
 
