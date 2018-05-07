@@ -13,6 +13,8 @@
 namespace Opera\Component\WebApplication;
 
 
+use Opera\Component\Http\Mime;
+use Opera\Component\Http\Request;
 use Opera\Component\Http\RequestBuilder;
 use Opera\Component\Http\RequestInterface;
 use Opera\Component\Http\ResponseInterface;
@@ -42,6 +44,43 @@ abstract class BrowserTestCase extends TestCase
         return $this->createWebApp()->run($request);
     }
 
+    /**
+     * Does a simple get request
+     *
+     * @param string $uri
+     * @param array  $query
+     * @return ResponseInterface
+     */
+    protected function get(string $uri, array $query) : ResponseInterface
+    {
+        return $this->execute($this->request()
+            ->method(Request::METHOD_GET)
+            ->url($uri)
+            ->query($query));
+    }
+
+    /**
+     * Does a get request that expects a json body as response
+     * @param string $uri
+     * @param array  $query
+     * @return ResponseInterface
+     */
+    protected function getJson(string $uri, array $query) : ResponseInterface
+    {
+        return $this->execute($this->request()
+            ->method(Request::METHOD_GET)
+            ->url($uri)
+            ->query($query)
+            ->accept(Mime::APPLICATION_JSON));
+    }
+
+    /**
+     * Does a json post request and expects json as response
+     *
+     * @param string $uri
+     * @param array  $data
+     * @return ResponseInterface
+     */
     protected function postJson(string $uri, array $data) : ResponseInterface
     {
         return $this->execute($this->request()->postJson($uri, $data));

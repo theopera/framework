@@ -128,7 +128,7 @@ class RequestBuilder
     public function build() : RequestInterface
     {
         $request = new Request($this->method, $this->url, $this->headers, $this->query, $this->post);
-        $request->setContent($this->content);
+        $request->setContent($this->content ?? '');
 
         return $request;
     }
