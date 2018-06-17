@@ -38,6 +38,16 @@ class ParameterBag implements ParameterBagInterface
         return isset($this->parameters[$key]);
     }
 
+    public function getSection(string $key): ParameterBagInterface
+    {
+        $section = $this->get($key , []);
+        if (!is_array($section)) {
+            $section = [];
+        }
+
+        return new ParameterBag($section);
+    }
+
     /**
      * Add a parameter to the bag
      * 

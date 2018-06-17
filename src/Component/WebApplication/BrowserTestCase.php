@@ -13,6 +13,8 @@
 namespace Opera\Component\WebApplication;
 
 
+use Opera\Component\Http\Header\Header;
+use Opera\Component\Http\Header\Headers;
 use Opera\Component\Http\Mime;
 use Opera\Component\Http\Request;
 use Opera\Component\Http\RequestBuilder;
@@ -81,9 +83,21 @@ abstract class BrowserTestCase extends TestCase
      * @param array  $data
      * @return ResponseInterface
      */
-    protected function postJson(string $uri, array $data) : ResponseInterface
+    protected function postJson(string $uri, array $data, Headers $headers = null) : ResponseInterface
     {
-        return $this->execute($this->request()->postJson($uri, $data));
+        return $this->execute($this->request()->headers($headers)->postJson($uri, $data));
+    }
+
+    /**
+     * Does a json put request and expects json as response
+     *
+     * @param string $uri
+     * @param array  $data
+     * @return ResponseInterface
+     */
+    protected function putJson(string $uri, array $data, Headers $headers = null) : ResponseInterface
+    {
+        return $this->execute($this->request()->headers($headers)->putJson($uri, $data));
     }
 
 }

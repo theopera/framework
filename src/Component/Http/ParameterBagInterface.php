@@ -24,6 +24,14 @@ interface ParameterBagInterface
     public function exists(string $key) : bool;
 
     /**
+     * Get an new array section
+     *
+     * @param string $key
+     * @return ParameterBagInterface
+     */
+    public function getSection(string $key): ParameterBagInterface;
+
+    /**
      * Add a parameter to the bag
      *
      * @param string $key

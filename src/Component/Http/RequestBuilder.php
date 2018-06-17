@@ -56,6 +56,18 @@ class RequestBuilder
         $this->headers = new Headers();
     }
 
+    /**
+     * @param Headers|null $headers
+     * @return $this
+     */
+    public function headers(Headers $headers = null)
+    {
+        if ($headers) {
+            $this->headers = $headers;
+        }
+
+        return $this;
+    }
 
     /**
      * Set a Method
@@ -130,7 +142,19 @@ class RequestBuilder
 
     public function postJson(string $url, array $data) : RequestBuilder
     {
+
         $this->method(Request::METHOD_POST)
+            ->url($url)
+            ->contentType(Mime::APPLICATION_JSON)
+            ->accept(Mime::APPLICATION_JSON)
+            ->content(json_encode($data));
+
+        return $this;
+    }
+
+    public function putJson(string $url, array $data) : RequestBuilder
+    {
+        $this->method(Request::METHOD_PUT)
             ->url($url)
             ->contentType(Mime::APPLICATION_JSON)
             ->accept(Mime::APPLICATION_JSON)
