@@ -181,9 +181,9 @@ class Request implements RequestInterface
     /**
      * @return bool
      */
-    public function isUpdate() : bool
+    public function isPut() : bool
     {
-        return $this->method === self::METHOD_UPDATE;
+        return $this->method === self::METHOD_PUT;
     }
 
     /**

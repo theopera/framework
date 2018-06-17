@@ -76,7 +76,7 @@ interface RequestInterface
     /**
      * @return bool
      */
-    public function isUpdate() : bool;
+    public function isPut() : bool;
 
     /**
      * @return bool

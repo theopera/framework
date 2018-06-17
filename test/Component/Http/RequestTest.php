@@ -48,7 +48,7 @@ class RequestTest extends TestCase
         self::assertFalse($request->isOptions());
         self::assertFalse($request->isPatch());
         self::assertFalse($request->isPost());
-        self::assertFalse($request->isUpdate());
+        self::assertFalse($request->isPut());
     }
 
     public function testIsPostGood()
@@ -61,7 +61,7 @@ class RequestTest extends TestCase
         self::assertFalse($request->isOptions());
         self::assertFalse($request->isPatch());
         self::assertFalse($request->isGet());
-        self::assertFalse($request->isUpdate());
+        self::assertFalse($request->isPut());
     }
 
     public function testIsDeleteGood()
@@ -74,7 +74,7 @@ class RequestTest extends TestCase
         self::assertFalse($request->isOptions());
         self::assertFalse($request->isPatch());
         self::assertFalse($request->isGet());
-        self::assertFalse($request->isUpdate());
+        self::assertFalse($request->isPut());
     }
 
     public function testIsHeadGood()
@@ -87,7 +87,7 @@ class RequestTest extends TestCase
         self::assertFalse($request->isOptions());
         self::assertFalse($request->isPatch());
         self::assertFalse($request->isGet());
-        self::assertFalse($request->isUpdate());
+        self::assertFalse($request->isPut());
     }
 
     public function testIsOptionGood()
@@ -100,7 +100,7 @@ class RequestTest extends TestCase
         self::assertFalse($request->isHead());
         self::assertFalse($request->isPatch());
         self::assertFalse($request->isGet());
-        self::assertFalse($request->isUpdate());
+        self::assertFalse($request->isPut());
     }
 
     public function testIsPatchGood()
@@ -113,14 +113,14 @@ class RequestTest extends TestCase
         self::assertFalse($request->isHead());
         self::assertFalse($request->isOptions());
         self::assertFalse($request->isGet());
-        self::assertFalse($request->isUpdate());
+        self::assertFalse($request->isPut());
     }
 
-    public function testIsUpdateGood()
+    public function testIsPutGood()
     {
-        $request = new Request(Request::METHOD_UPDATE);
+        $request = new Request(Request::METHOD_PUT);
 
-        self::assertTrue($request->isUpdate());
+        self::assertTrue($request->isPut());
         self::assertFalse($request->isPost());
         self::assertFalse($request->isDelete());
         self::assertFalse($request->isHead());
