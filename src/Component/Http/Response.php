@@ -227,7 +227,7 @@ class Response implements ResponseInterface
     {
         $this->statusCode = $statusCode;
         $this->headers = $headers ?? new Headers();
-        $this->body = $body;
+        $this->setBody($body);
 
         $this->setBaseHeaders();
     }
@@ -286,6 +286,7 @@ class Response implements ResponseInterface
     public function setBody(string $body)
     {
         $this->body = $body;
+        $this->headers->add(new Header('Content-Length', strlen($body)), true);
     }
 
     /**
