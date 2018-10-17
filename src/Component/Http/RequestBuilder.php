@@ -92,6 +92,13 @@ class RequestBuilder
     {
         $this->url = $url;
 
+        // Also store the query parameters if present
+        $queryString = parse_url($this->url, PHP_URL_QUERY);
+        parse_str($queryString, $query);
+        if ($query) {
+            $this->query = $query;
+        }
+
         return $this;
     }
 
