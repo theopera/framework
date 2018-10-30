@@ -49,16 +49,18 @@ abstract class BrowserTestCase extends TestCase
     /**
      * Does a simple get request
      *
-     * @param string $uri
-     * @param array  $query
+     * @param string       $uri
+     * @param array        $query
+     * @param Headers|null $headers
      * @return ResponseInterface
      */
-    protected function get(string $uri, array $query) : ResponseInterface
+    protected function get(string $uri, array $query, Headers $headers = null) : ResponseInterface
     {
         return $this->execute($this->request()
             ->method(Request::METHOD_GET)
             ->url($uri)
-            ->query($query));
+            ->query($query)
+            ->headers($headers));
     }
 
     /**
@@ -67,12 +69,13 @@ abstract class BrowserTestCase extends TestCase
      * @param array  $query
      * @return ResponseInterface
      */
-    protected function getJson(string $uri, array $query) : ResponseInterface
+    protected function getJson(string $uri, array $query = [], Headers $headers = null) : ResponseInterface
     {
         return $this->execute($this->request()
             ->method(Request::METHOD_GET)
             ->url($uri)
             ->query($query)
+            ->headers($headers)
             ->accept(Mime::APPLICATION_JSON));
     }
 
@@ -100,4 +103,19 @@ abstract class BrowserTestCase extends TestCase
         return $this->execute($this->request()->headers($headers)->putJson($uri, $data));
     }
 
+    /**
+     * Does a delete request to the endpoint
+     *
+     * @param string $uri
+     * @param array  $query
+     * @return ResponseInterface
+     */
+    protected function delete(string $uri, array $query = [], Headers $headers = null): ResponseInterface
+    {
+        return $this->execute($this->request()
+            ->method(Request::METHOD_DELETE)
+            ->url($uri)
+            ->query($query)
+            ->headers($headers));
+    }
 }

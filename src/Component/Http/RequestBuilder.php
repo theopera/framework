@@ -108,7 +108,7 @@ class RequestBuilder
      * @param array $query
      * @return RequestBuilder
      */
-    public function query(array $query): RequestBuilder
+    public function query(array $query = []): RequestBuilder
     {
         $this->query = $query;
         return $this;
