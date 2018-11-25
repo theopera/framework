@@ -1,33 +1,31 @@
 #!/usr/bin/env php
 <?php
 /**
- * Opera
+ * The Opera Framework
  * opera
  *
  * @author    Marc Heuker of Hoek <me@marchoh.com>
- * @copyright 2016 - 2017 All rights reserved
+ * @copyright 2016 - 2018 All rights reserved
  * @license   MIT
  * @created   10-7-16
  * @version   1.0
  */
 
+use Opera\Component\Application\Context;
+use Opera\App\OperaApp;
+
 $autoloaders = ['vendor/autoload.php', '../vendor/autoload.php', '../../vendor/autoload.php'];
 
-$autoloaderLoaded = false;
-foreach($autoloaders as $autoloader){
-    if(file_exists($autoloader)){
+do{
+    $autoloader = array_shift($autoloaders);
+    if (file_exists($autoloader)) {
         require $autoloader;
-        $autoloaderLoaded = true;
-        break;
     }
-}
+}while(spl_autoload_functions() === false);
 
-if(!$autoloaderLoaded){
+if(spl_autoload_functions() === false){
     die('Could not find the composer autoloader, please run composer install first.');
 }
 
-
-use Opera\Installer\Installer;
-
-$installer = new Installer();
-$installer->start();
+$app = new OperaApp(new Context());
+exit($app->start($argv));

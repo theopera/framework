@@ -13,7 +13,9 @@
 namespace Opera\Component\Http;
 
 
-class MimeTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class MimeTest extends TestCase
 {
 
     public function testFromExtensionGood()

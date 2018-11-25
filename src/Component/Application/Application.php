@@ -13,63 +13,66 @@
 namespace Opera\Component\Application;
 
 
-use SplFileObject;
+use Opera\Component\Application\Io\In;
+use Opera\Component\Application\Io\InInterface;
+use Opera\Component\Application\Io\Out;
+use Opera\Component\Application\Io\OutInterface;
 
 abstract class Application
 {
+    /**
+     * @var Context
+     */
+    private $context;
 
     /**
-     * @var SplFileObject
+     * Application constructor.
+     * @param Context $context
      */
-    private $in;
-
-    /**
-     * @var SplFileObject
-     */
-    private $out;
-
-    /**
-     * @var SplFileObject
-     */
-    private $err;
-
-    public function __construct()
+    public function __construct(Context $context)
     {
-        $this->in = new SplFileObject('php://stdin');
-        $this->out = new SplFileObject('php://stdout');
-        $this->err = new SplFileObject('php://stderr');
-    }
-
-    public abstract function run();
-
-    public function start()
-    {
-        $this->run();
+        $this->context = $context;
     }
 
     /**
-     * @return SplFileObject
+     * @param ArgumentBag $argumentBag
+     * @param InInterface $in
+     * @param OutInterface $out
+     * @param OutInterface|null $err
+     * @return int Exit code
      */
-    protected function getIn()
+    public abstract function run(
+        ArgumentBag $argumentBag,
+        InInterface $in,
+        OutInterface $out,
+        OutInterface $err = null
+    ): int;
+
+    /**
+     * @param string[] $args
+     * @param InInterface|null $in
+     * @param OutInterface|null $out
+     * @param OutInterface|null $err
+     * @return int
+     */
+    public function start(
+        array $args = [],
+        InInterface $in = null,
+        OutInterface $out = null,
+        OutInterface $err = null): int
     {
-        return $this->in;
+        $in = $in ?? In::open('php://stdin');
+        $out = $out ?? Out::open('php://stdout');
+        $err = $err ?? Out::open('php://stderr');
+
+        return $this->run(new ArgumentBag($args), $in, $out, $err);
     }
 
     /**
-     * @return SplFileObject
+     * @return Context
      */
-    protected function getOut()
+    protected function getContext(): Context
     {
-        return $this->out;
+        return $this->context;
     }
-
-    /**
-     * @return SplFileObject
-     */
-    protected function getErr()
-    {
-        return $this->err;
-    }
-    
-    
 }
