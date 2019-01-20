@@ -24,12 +24,17 @@ class CommandInfo
     /**
      * @var string
      */
-    private $description;
+    private $description = '';
+
+    /**
+     * @var string[]
+     */
+    private $options = [];
 
     /**
      * @var string
      */
-    private $example;
+    private $example = '';
 
     /**
      * @return string
@@ -66,6 +71,24 @@ class CommandInfo
         $this->description = $description;
         return $this;
     }
+
+    /**
+     * @return string[]
+     */
+    public function getOptions(): array
+    {
+        return $this->options;
+    }
+
+    /**
+     * @param string[] $options
+     */
+    public function setOptions(array $options): CommandInfo
+    {
+        $this->options = $options;
+        return $this;
+    }
+
 
     /**
      * @return string

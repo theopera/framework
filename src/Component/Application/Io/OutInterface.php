@@ -16,12 +16,12 @@ namespace Opera\Component\Application\Io;
 interface OutInterface
 {
 
-    public function write(string $line, ...$parameters): void;
+    public function write(string $line = '', ...$parameters): void;
 
-    public function writeln(string $line, ...$parameters): void;
+    public function writeln(string $line = '', ...$parameters): void;
 
-    public function writeColor(string $line, int $color1 = null,int $color2 = null, ...$parameters): void;
+    public function writeColor(string $line = '', int $color1 = null,int $color2 = null, ...$parameters): void;
 
-    public function writeColorln(string $line, int $color1 = null,int $color2 = null, ...$parameters): void;
+    public function writeColorln(string $line = '', int $color1 = null,int $color2 = null, ...$parameters): void;
 
 }

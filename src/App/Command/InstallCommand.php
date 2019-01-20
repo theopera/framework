@@ -14,6 +14,7 @@ namespace Opera\App\Command;
 
 
 use Exception;
+use Opera\Component\Application\ArgumentBag;
 use Opera\Component\Application\Color;
 use Opera\Component\Application\CommandInfo;
 use Opera\Component\Application\CommandInterface;
@@ -59,13 +60,14 @@ class InstallCommand implements CommandInterface
     }
 
     /**
+     * @param ArgumentBag $args
      * @param InInterface $in
      * @param OutInterface $out
      * @param OutInterface|null $err
      * @return int
      * @throws Exception
      */
-    public function run(InInterface $in, OutInterface $out, OutInterface $err = null): int
+    public function run(ArgumentBag $args, InInterface $in, OutInterface $out, OutInterface $err = null): int
     {
         $out->write($this->getHeader());
 

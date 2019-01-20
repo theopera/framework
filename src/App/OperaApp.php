@@ -13,12 +13,12 @@
 namespace Opera\App;
 
 
-use Opera\Component\Application\AbstractCommandContainerApplication;
+use Opera\Component\Application\AbstractContainerApplication;
 use Opera\Component\Application\CommandContainer;
 use Opera\Component\Application\CommandInterface;
 use Opera\App\Command\InstallCommand;
 
-class OperaApp extends AbstractCommandContainerApplication
+class OperaApp extends AbstractContainerApplication
 {
 
     /**

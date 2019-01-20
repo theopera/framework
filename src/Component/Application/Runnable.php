@@ -22,11 +22,12 @@ interface Runnable
     /**
      * Executes the command
      *
+     * @param ArgumentBag $argumentBag
      * @param InInterface $in
      * @param OutInterface $out
      * @param OutInterface|null $err
      * @return int
      */
-    public function run(InInterface $in, OutInterface $out, OutInterface $err = null): int;
+    public function run(ArgumentBag $argumentBag, InInterface $in, OutInterface $out, OutInterface $err = null): int;
 
 }

@@ -18,7 +18,7 @@ use Opera\Component\Application\Io\InInterface;
 use Opera\Component\Application\Io\Out;
 use Opera\Component\Application\Io\OutInterface;
 
-abstract class Application
+abstract class Application implements Runnable
 {
     /**
      * @var Context

@@ -17,7 +17,7 @@ use Opera\Component\Application\Io\InInterface;
 use Opera\Component\Application\Io\OutInterface;
 use SplFileObject;
 
-abstract class AbstractCommandContainerApplication extends Application
+abstract class AbstractContainerApplication extends Application
 {
     /**
      * @param ArgumentBag $argumentBag
@@ -38,11 +38,16 @@ abstract class AbstractCommandContainerApplication extends Application
             $command = $commands->get($commandName);
 
             if ($command === null) {
-                $err->write('Command not found');
+                $err->writeColorln('Command not found', Color::RED);
+                return 2;
+            }
+
+            if ($argumentBag->count() === 3 && $argumentBag->get(2) === 'help') {
+                $this->helpCommand($out, $command->getInfo());
                 return 1;
             }
 
-            return $command->run($in, $out, $err);
+            return $command->run($argumentBag, $in, $out, $err);
         }
     }
 
@@ -62,6 +67,21 @@ abstract class AbstractCommandContainerApplication extends Application
 
             $out->writeColorln($info->getName(), Color::GREEN);
             $out->writeln("\t" . $info->getDescription());
+        }
+    }
+
+    protected function helpCommand(OutInterface $out, CommandInfo $info)
+    {
+        $out->writeColorln($info->getName(), Color::GREEN);
+        $out->writeln("\t" . $info->getDescription());
+        $out->writeln();
+        $out->writeln("Example");
+        $out->writeln($info->getExample());
+        $out->writeln();
+
+        $out->writeln("Options");
+        foreach ($info->getOptions() as $parameter => $description) {
+            $out->writeln(sprintf('    %-16s %s', $parameter, $description));
         }
     }
 

@@ -41,7 +41,7 @@ class AbstractCommandContainerApplicationTest extends TestCase
     protected $context;
 
     /**
-     * @var AbstractCommandContainerApplication|MockObject
+     * @var AbstractContainerApplication|MockObject
      */
     protected $application;
 
@@ -70,7 +70,7 @@ class AbstractCommandContainerApplicationTest extends TestCase
         $this->err = $this->createMock(OutInterface::class);
         $this->context = $this->createMock(Context::class);
         $this->application = $this->getMockForAbstractClass(
-            AbstractCommandContainerApplication::class, [$this->context]
+            AbstractContainerApplication::class, [$this->context]
         );
         $this->commandContainer = new CommandContainer();
         $this->command = $this->createMock(CommandInterface::class);

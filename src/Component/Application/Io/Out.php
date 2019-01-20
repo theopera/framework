@@ -37,17 +37,17 @@ class Out implements OutInterface
         $this->fileObject = $fileObject;
     }
 
-    public function write(string $line, ...$parameters): void
+    public function write(string $line = '', ...$parameters): void
     {
         $this->fileObject->fwrite(vsprintf($line, $parameters));
     }
 
-    public function writeln(string $line,  ...$parameters): void
+    public function writeln(string $line = '',  ...$parameters): void
     {
         $this->fileObject->fwrite(vsprintf($line, $parameters) . PHP_EOL);
     }
 
-    public function writeColor(string $line, int $color1 = null, int $color2 = null,  ...$parameters): void
+    public function writeColor(string $line = '', int $color1 = null, int $color2 = null,  ...$parameters): void
     {
         $this->write(
             $this->color($color1) . $this->color($color2) .  $line . $this->color(Color::RESET)
@@ -55,7 +55,7 @@ class Out implements OutInterface
         );
     }
 
-    public function writeColorln(string $line, int $color1 = null, int $color2 = null,  ...$parameters): void
+    public function writeColorln(string $line = '', int $color1 = null, int $color2 = null,  ...$parameters): void
     {
         $this->write(
             $this->color($color1) . $this->color($color2) .  $line . $this->color(Color::RESET) . PHP_EOL,
