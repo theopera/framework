@@ -27,6 +27,7 @@ use Opera\Component\Http\Middleware\MiddlewareCollectionInterface;
 use Opera\Component\Http\Middleware\MiddlewareInterface;
 use ReflectionClass;
 use Opera\Component\Http\Response;
+use ReflectionException;
 use Throwable;
 
 class WebApplication implements MiddlewareInterface
@@ -88,6 +89,13 @@ class WebApplication implements MiddlewareInterface
 
     }
 
+    /**
+     * @param MiddlewareCollectionInterface $collection
+     * @param RequestInterface $request
+     * @return ResponseInterface
+     * @throws HttpException
+     * @throws ReflectionException
+     */
     public function handle(MiddlewareCollectionInterface $collection, RequestInterface $request) : ResponseInterface
     {
         // If we have a trailing slash we will do redirect (e.g. /bla/bla/ -> /bla/bla)
@@ -147,6 +155,7 @@ class WebApplication implements MiddlewareInterface
      *
      * @return string[]
      * @throws HttpException
+     * @throws ReflectionException
      */
     private function mapQueryToActionParameters(RouteEndpoint $route, RequestInterface $request) : array
     {
@@ -200,12 +209,25 @@ class WebApplication implements MiddlewareInterface
 
     private function errorPageJson(int $statusCode, Throwable $throwable) : Response
     {
-        return new JsonResponse([
-            'message' => $throwable->getMessage(),
-            'file' => $throwable->getFile(),
-            'line' => $throwable->getLine(),
-            'stacktrace' => $throwable->getTrace(),
-        ], JSON_PRETTY_PRINT, $statusCode);
+        if ($this->context->isProduction()) {
+            if ($throwable instanceof HttpException) {
+                $message = $throwable->getMessage();
+            }else{
+                $message = 'An internal server error occurred';
+            }
+            $response = [
+                'message' => $message,
+            ];
+        }else{
+            $response = [
+                'message' => $throwable->getMessage(),
+                'file' => $throwable->getFile(),
+                'line' => $throwable->getLine(),
+                'stacktrace' => $throwable->getTrace(),
+            ];
+        }
+
+        return new JsonResponse($response, JSON_PRETTY_PRINT, $statusCode);
     }
 
     private function errorPageHtml(int $statusCode, Throwable $throwable) : Response

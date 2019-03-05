@@ -44,6 +44,24 @@ class Context
     }
 
     /**
+     * Whenever this application is running in *production* mode
+     * @return bool
+     */
+    public function isProduction(): bool
+    {
+        return $this->getEnvironment() === 'production';
+    }
+
+    /**
+     * Whenever this application is running in *development* mode
+     * @return bool
+     */
+    public function isDevelopment(): bool
+    {
+        return !$this->isProduction();
+    }
+
+    /**
      * @return DatabaseManagerInterface
      * @throws NotConfiguredException
      */
