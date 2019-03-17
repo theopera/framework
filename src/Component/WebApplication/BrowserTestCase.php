@@ -13,8 +13,8 @@
 namespace Opera\Component\WebApplication;
 
 
-use Opera\Component\Http\Header\Header;
 use Opera\Component\Http\Header\Headers;
+use Opera\Component\Http\HttpException;
 use Opera\Component\Http\Mime;
 use Opera\Component\Http\Request;
 use Opera\Component\Http\RequestBuilder;
@@ -41,11 +41,21 @@ abstract class BrowserTestCase extends TestCase
         return $this->executeRequest($builder->build());
     }
 
+    /**
+     * @param RequestInterface $request
+     * @return ResponseInterface
+     * @throws HttpException
+     */
     protected function executeRequest(RequestInterface $request) : ResponseInterface
     {
-        return $this->createWebApp()->run($request);
-    }
+        $response = $this->createWebApp()->run($request);
 
+        if ($response->getStatusCode() === 500) {
+            throw new HttpException(500, $response->getBody());
+        }
+
+        return $response;
+    }
     /**
      * Does a simple get request
      *
