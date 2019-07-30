@@ -210,13 +210,8 @@ class WebApplication implements MiddlewareInterface
     private function errorPageJson(int $statusCode, Throwable $throwable) : Response
     {
         if ($this->context->isProduction()) {
-            if ($throwable instanceof HttpException) {
-                $message = $throwable->getMessage();
-            }else{
-                $message = 'An internal server error occurred';
-            }
             $response = [
-                'message' => $message,
+                'message' => $this->getErrorMessage($throwable),
             ];
         }else{
             $response = [
@@ -234,6 +229,7 @@ class WebApplication implements MiddlewareInterface
     {
         $data = [
             'environment' => $this->context->getEnvironment(),
+            'message' => $this->getErrorMessage($throwable),
             'throwable' => $throwable,
             'statusCode' => $statusCode,
             'statusText' => Response::getStatusText($statusCode),
@@ -244,6 +240,21 @@ class WebApplication implements MiddlewareInterface
         $template->load('error');
         
         return new Response($template->render($data), $statusCode);
+    }
+
+    /**
+     * Returns a neutral error message when we are in production
+     *
+     * @param Throwable $throwable
+     * @return string
+     */
+    private function getErrorMessage(Throwable $throwable): string
+    {
+        if ($this->context->isDevelopment() || $throwable instanceof HttpException) {
+            return $throwable->getMessage();
+        }
+
+        return 'An internal server error occurred';
     }
 
     private function getErrorRender() : RenderInterface

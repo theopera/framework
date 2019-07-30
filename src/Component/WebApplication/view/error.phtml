@@ -5,6 +5,7 @@
  * @var $statusText string
  * 
  * @var $throwable Throwable
+ * @var $message string
  */
 ?>
 <!doctype html>
@@ -70,7 +71,7 @@
 
 
         <div class="panel-body">
-            <p><?=$throwable->getMessage()?></p>
+            <p><?=$message?></p>
             <?php if($environment !== 'production'): ?>
             <hr>
             <table border="0" cellpadding="4">
