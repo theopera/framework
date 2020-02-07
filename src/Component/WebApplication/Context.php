@@ -26,7 +26,6 @@ use Opera\Component\Http\Middleware\MiddlewareCollectionInterface;
 abstract class Context extends ApplicationContext
 {
 
-
     /**
      * @var SessionManagerInterface
      */
@@ -51,14 +50,6 @@ abstract class Context extends ApplicationContext
     public function getMiddlewareCollection(MiddlewareCollectionInterface $collection) : MiddlewareCollectionInterface
     {
           return $collection;
-    }
-
-    /**
-     * @return ConfigurationInterface
-     */
-    public function getConfig() : ConfigurationInterface
-    {
-        return $this->configuration;
     }
 
     /**

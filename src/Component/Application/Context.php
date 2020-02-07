@@ -36,6 +36,14 @@ class Context
     }
 
     /**
+     * @return ConfigurationInterface
+     */
+    public function getConfig() : ConfigurationInterface
+    {
+        return $this->configuration;
+    }
+
+    /**
      * @return string
      */
     public function getEnvironment(): string
