@@ -29,6 +29,11 @@ class Request implements RequestInterface
     const METHOD_OPTIONS = 'OPTIONS';
 
     /**
+     * @var bool
+     */
+    private $secure = false;
+
+    /**
      * @var string
      */
     private $method;
@@ -95,6 +100,22 @@ class Request implements RequestInterface
 
         $this->setUri($uri);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function isSecure(): bool
+    {
+        return $this->secure;
+    }
+    /**
+     * @inheritDoc
+     */
+    public function getScheme(): string
+    {
+        return $this->isSecure() ? 'https' : 'http';
+    }
+
 
     /**
      * @return Headers | Header[]
@@ -280,6 +301,7 @@ class Request implements RequestInterface
         $request->setIp($_SERVER['REMOTE_ADDR']);
 
         $request->content = file_get_contents('php://input');
+        $request->secure = !empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS'] !== 'off');
 
         return $request;
     }

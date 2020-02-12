@@ -183,7 +183,11 @@ class Response implements ResponseInterface
      *
      * @return Response
      */
-    public static function redirect($url, array $parameters = [], int $statusCode = Response::STATUS_MOVED_PERMANENTLY) : Response
+    public static function redirect(
+        $url,
+        array $parameters = [],
+        int $statusCode = Response::STATUS_MOVED_PERMANENTLY
+    ) : Response
     {
         if (!empty($parameters)) {
             $url = $url . '?' . http_build_query($parameters);

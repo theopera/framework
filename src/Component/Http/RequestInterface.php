@@ -18,6 +18,19 @@ use Opera\Component\Http\Header\Headers;
 interface RequestInterface
 {
     /**
+     * Whenever the request was done using SSL/TLS
+     * @return bool
+     */
+    public function isSecure(): bool;
+
+    /**
+     * Gets schema of the request (http/https)
+     *
+     * @return string
+     */
+    public function getScheme(): string;
+
+    /**
      * @return Headers | Header[]
      */
     public function getHeaders() : Headers;

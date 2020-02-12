@@ -104,7 +104,7 @@ abstract class Controller
         }
 
         $data += [
-            'base_url' => 'http://' . $this->request->getHost(),
+            'base_url' => '//' . $this->request->getHost(),
             '_messages' => $this->messages,
         ];
         $this->messages = [];
@@ -235,7 +235,7 @@ abstract class Controller
      */
     protected function redirect($controller = null, $action = 'index', array $parameters = []) : Response
     {
-        $host = 'http://'. $_SERVER['HTTP_HOST'];
+        $host = '//'. $this->request->getHost();
 
         if ($controller === null) {
 
