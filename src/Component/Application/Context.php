@@ -18,6 +18,7 @@ use Opera\Component\Database\DatabaseManagerInterface;
 use Opera\Component\WebApplication\Configuration;
 use Opera\Component\WebApplication\ConfigurationInterface;
 use Opera\Component\WebApplication\NotConfiguredException;
+use Opera\Component\ErrorHandler\ErrorCatcher;
 
 class Context
 {
@@ -25,6 +26,11 @@ class Context
      * @var ConfigurationInterface
      */
     protected $configuration;
+
+    /**
+     * @var ErrorCatcher
+     */
+    protected $errorCatcher;
 
     /**
      * Context constructor.
@@ -67,6 +73,15 @@ class Context
     public function isDevelopment(): bool
     {
         return !$this->isProduction();
+    }
+
+    public function getErrorCatcher()
+    {
+        if ($this->errorCatcher === null) {
+            $this->errorCatcher = new ErrorCatcher();
+        }
+
+        return $this->errorCatcher;
     }
 
     /**

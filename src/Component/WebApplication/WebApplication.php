@@ -84,6 +84,7 @@ class WebApplication implements MiddlewareInterface
             return $response;
 
         }catch (Throwable $e){
+            $this->context->getErrorCatcher()->handle($e);
             return $this->errorPage($e, $request);
         }
 

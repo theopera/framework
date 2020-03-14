@@ -17,6 +17,7 @@ use Opera\Component\Application\Io\In;
 use Opera\Component\Application\Io\InInterface;
 use Opera\Component\Application\Io\Out;
 use Opera\Component\Application\Io\OutInterface;
+use Throwable;
 
 abstract class Application implements Runnable
 {
@@ -65,7 +66,12 @@ abstract class Application implements Runnable
         $out = $out ?? Out::open('php://stdout');
         $err = $err ?? Out::open('php://stderr');
 
-        return $this->run(new ArgumentBag($args), $in, $out, $err);
+        try {
+            return $this->run(new ArgumentBag($args), $in, $out, $err);
+        }catch (Throwable $e){
+            $this->context->getErrorCatcher()->handle($e);
+            return 128;
+        }
     }
 
     /**
